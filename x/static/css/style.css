@@ -1,0 +1,27 @@
+body {
+    background-color: #f8f9fa; 
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Navbar */
+.navbar {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+/* Messages Flash */
+.messages {
+    margin-bottom: 20px;
+}
+
+.alert {
+    font-size: 0.9rem;
+    padding: 10px 15px;
+}
+
+/* Conteneur principal */
+.container {
+    max-width: 900px;
+    margin: auto;
+}

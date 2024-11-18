@@ -8,6 +8,19 @@ class User(AbstractUser):
     date_joined = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
 
+    groups = models.ManyToManyField(
+            'auth.Group',
+            related_name='account_user_set',
+            blank=True,
+            help_text='The groups this user belongs to.'
+        )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name='account_user_permissions_set',  
+        blank=True,
+        help_text='Specific permissions for this user.'
+    )
+
     def __str__(self):
         return self.username
 
