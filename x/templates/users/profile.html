@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Profil de {{ user.username }}</h2>
+  <p>Email : {{ user.email }}</p>
+  <p>Date d'inscription : {{ user.date_joined }}</p>
+  <p>Bio : {{ user.bio }}</p>
+  <p>Nombre de tweets : {{ user.tweets.count }}</p>
+  <p>Nombre de likes : {{ user.likes.count }}</p>
+  <a href="{% url 'password_change' %}">Modifier le mot de passe</a>
+  <a href="{% url 'deactivate' user.username %}" onclick="return confirm('Êtes-vous sûr de vouloir désactiver votre compte ?');">
+  Désactiver mon compte
+  </a>
+{% endblock %}
