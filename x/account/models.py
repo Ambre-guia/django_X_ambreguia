@@ -2,11 +2,16 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 class User(AbstractUser): 
+    username = models.CharField(max_length=150, unique=True)
     email = models.EmailField(unique=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
     date_joined = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
 
     groups = models.ManyToManyField(
             'auth.Group',

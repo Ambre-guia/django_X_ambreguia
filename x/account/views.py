@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.forms import UserCreationForm
@@ -7,7 +7,7 @@ from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.contrib import messages
 from django.urls import reverse_lazy
 
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, EmailAuthenticationForm
 from .models import User
 
 
@@ -27,18 +27,36 @@ def register(request):
     return render(request, 'users/register.html', {'form': form})
 
 
-class CustomLoginView(LoginView):
-    template_name = 'users/login.html'
+def custom_login_view(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('home') 
+        else:
+            messages.error(request, "Email ou mot de passe incorrect.")
+            return render(request, 'users/login.html')  
+    else:
+        return render(request, 'users/login.html')  
 
-#class CustomPasswordChangeView(PasswordChangeView):
-#    template_name = 'users/password_change.html'
-#    success_url = reverse_lazy('profile')
+class CustomPasswordChangeView(PasswordChangeView):
+    template_name = 'users/password_change.html'
+    success_url = reverse_lazy('profile')
     
 @login_required
 def profile_view(request, username):
     user = get_object_or_404(User, username=username)
     registration_date = user.date_joined
+
 #    usersposts = Post.objects.filter(uploader=view_user)
+#    sorted_usersposts = sorted(
+#        chain(usersposts),
+#        key=lambda instance: instance.date_created,
+#        reverse=True
+#    )
+
     return render(request, 'users/profile.html', {'user': user})
 
 @login_required
