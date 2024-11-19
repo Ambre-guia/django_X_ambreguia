@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load post_extras %}
+{% block content %}
+    <div class="p-4">
+    <div class="flex items-center space-x-6">
+        <button type="button" onClick="javascript:history.go(-1);">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-z80fyv r-19wmn03" style="color: rgb(15, 20, 25);"><g><path d="M7.414 13l5.043 5.04-1.414 1.42L3.586 12l7.457-7.46 1.414 1.42L7.414 11H21v2H7.414z"></path></g></svg>
+        </button>
+        <h1 class="font-bold text-xl">Poster</h1>
+    </div>
+    <div class="flex items-start space-x-4 pt-6">
+        <div>
+            <div>
+                {% if post.uploader.profile_photo %}
+                    <img class="max-h-10 w-10 rounded-full" src="{{ post.uploader.profile_photo.url }}" alt="{{ post.uploader.username }}">
+                {% else %}
+                    <img class="max-h-10 w-10 rounded-full" src="{% static 'Default_pfp.png' %}">
+                {% endif %}
+            </div>
+        </div>
+        <div>
+            <a href="{% url 'view_user' post.uploader.username %} " class="font-bold text-sm">{{ post.uploader.first_name }} {{ post.uploader.last_name }}</a>
+            <p class="text-sm text-neutral-500">@{{ post.uploader.username }}</p>
+        </div>
+    </div>
+    <div class="pt-4">
+        <h1>{{ post.content }}</h1>
+        {% if post.image %}
+                <img class="max-h-96 my-2 rounded-lg"src="{{ post.image.url }}">
+            {% endif %}
+        <p class="pt-2 text-neutral-500">{{ post.date_created|date:"G:i A" }} &middot; {{ post.date_created|date:"j M Y"|lower }}</p>
+    </div>
+    {% include 'tweets/partials/form_comment.html' %}
+</div>
+{% for instance in sorted_comments %}
+    {% if instance|model_type == 'Comment' %}
+        {% include 'tweets/partials/post_snippet.html' with post=instance %}
+    {% endif %}
+{% endfor %}
+{% endblock content %}
