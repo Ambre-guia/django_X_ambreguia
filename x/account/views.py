@@ -13,12 +13,15 @@ from .models import User
 
 @csrf_exempt
 def register(request):
+    form = CustomUserCreationForm()
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
+            user = form.save(commit=False)
+            user.uploader = request.user
             user = form.save()
             login(request, user)  
-            return redirect('home')  
+            return redirect('login')  
     else:
         form = CustomUserCreationForm()
     return render(request, 'users/register.html', {'form': form})
@@ -27,13 +30,15 @@ def register(request):
 class CustomLoginView(LoginView):
     template_name = 'users/login.html'
 
-class CustomPasswordChangeView(PasswordChangeView):
-    template_name = 'users/password_change.html'
-    success_url = reverse_lazy('profile')
+#class CustomPasswordChangeView(PasswordChangeView):
+#    template_name = 'users/password_change.html'
+#    success_url = reverse_lazy('profile')
     
 @login_required
 def profile_view(request, username):
     user = get_object_or_404(User, username=username)
+    registration_date = user.date_joined
+#    usersposts = Post.objects.filter(uploader=view_user)
     return render(request, 'users/profile.html', {'user': user})
 
 @login_required
