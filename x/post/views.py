@@ -21,7 +21,7 @@ def homepage(request):
             return redirect('homepage')
         
    
-    posts = models.Tweet.objects.annotate(num_comments=Count('comment'))
+
 
     posts = models.Tweet.objects.all()
     sorted_posts = sorted(
@@ -34,7 +34,7 @@ def homepage(request):
         'sorted_posts': sorted_posts,
     }
 
-    return render(request, 'post/homepage.html', context=context)
+    return render(request, 'tweets/home.html', context=context)
 
 @login_required
 def post_upload(request):
