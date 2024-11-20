@@ -117,7 +117,12 @@ dist
 .dynamodb/
 
 # BDD Sqlite
-.sqlite3
+x/db.sqlite3
+
+x/__pycache__/
+x/migrations/__pycache__
+
+
 
 # TernJS port file
 .tern-port
