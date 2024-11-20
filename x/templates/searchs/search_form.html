@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Accueil / X{% endblock %}
+{% load post_extras %}
+{% block content %}
+<div class="container mx-auto p-4">
+    <h1 class="text-xl font-bold mb-4">Rechercher des utilisateurs</h1>
+    <form method="get" action="{% url 'search_users' %}" class="mb-4">
+        <div class="flex items-center space-x-2">
+            <input 
+                type="text" 
+                name="query" 
+                placeholder="Nom d'utilisateur" 
+                value="{{ request.GET.query|default_if_none:'' }}"
+                class="border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring focus:border-blue-500"
+                required
+            />
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                Rechercher
+            </button>
+        </div>
+    </form>
+    
+    {% if query %}
+        <h2 class="text-lg font-semibold mb-2">Résultats pour "{{ query }}"</h2>
+        <ul>
+            {% for user in results %}
+                <li class="mb-2 flex justify-between items-center border-b pb-2">
+                    <a href="{% url 'profile' username=user.username %}" class="text-blue-500 hover:underline">
+                        {{ user.username }}
+                    </a>
+                    <div>
+                        {% if user in request.user.following.all %}
+                            <form method="post" action="{% url 'unfollow_user' user.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="text-red-500 hover:text-red-700">Se désabonner</button>
+                            </form>
+                        {% else %}
+                            <form method="post" action="{% url 'follow_user' user.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="text-green-500 hover:text-green-700">S'abonner</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </li>
+            {% empty %}
+                <p class="text-gray-500">Aucun utilisateur trouvé.</p>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+{% endblock %}

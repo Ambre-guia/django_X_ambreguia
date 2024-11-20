@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm
-from .models import User
+from .models import User, Follow
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 
@@ -12,16 +12,12 @@ class EmailAuthenticationForm(AuthenticationForm):
     username = forms.EmailField(label="Email", widget=forms.EmailInput(attrs={"autofocus": True}))
 
 
-#################
-### REFLEXION ###
-#################
+class UpdateUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'bio']
 
-#class UpdateUserForm(forms.ModelForm):
-#    class Meta:
-#        model = User
-#        fields = ['first_name', 'last_name', 'bio']
-
-#class FollowUsersForm(forms.ModelForm):
-#    class Meta:
-#        model = User
-#        fields = ['follows']
+class FollowUsersForm(forms.ModelForm):
+    class Meta:
+        model = Follow
+        fields = ['followed']

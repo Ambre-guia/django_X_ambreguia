@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Accueil / X{% endblock %}
+{% load post_extras %}
+{% block content %}
+<h1>Résultats de recherche pour "{{ query }}"</h1>
+<ul>
+    {% for user in results %}
+        <li>
+            <a href="{% url 'profile_view' username=user.username %}">{{ user.username }}</a>
+            {% if user in request.user.following.all %}
+                <form method="post" action="{% url 'unfollow_user' user.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Se désabonner</button>
+                </form>
+            {% else %}
+                <form method="post" action="{% url 'follow_user' user.id %}">
+                    {% csrf_token %}
+                    <button type="submit">S'abonner</button>
+                </form>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

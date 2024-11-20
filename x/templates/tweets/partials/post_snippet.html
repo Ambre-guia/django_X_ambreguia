@@ -29,6 +29,13 @@
             {% if post.image %}
                 <img class="max-h-96 mt-2 border rounded-lg" src="{{ post.image.url }}">
             {% endif %}
+            {% if post.hashtags.exists %}
+                <div class="mt-2 flex space-x-2">
+                    {% for hashtag in post.hashtags.all %}
+                        <a href="{% url 'hashtag_view' hashtag.name %}" class="text-blue-500 hover:underline">#{{ hashtag.name }}</a>
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>   
     </div>         
 </div>

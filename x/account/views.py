@@ -2,14 +2,16 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponseRedirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.contrib import messages
 from django.urls import reverse_lazy
+
 from itertools import chain
 
-from .forms import CustomUserCreationForm, EmailAuthenticationForm
-from .models import User
+from .forms import CustomUserCreationForm, EmailAuthenticationForm, FollowUsersForm, UpdateUserForm
+from .models import User, Follow
 from post.models import Tweet
 
 
@@ -49,20 +51,58 @@ class CustomPasswordChangeView(PasswordChangeView):
     
 @login_required
 def profile_view(request, username):
-    user = get_object_or_404(User, username=username)
-    registration_date = user.date_joined
-    user = request.user
-    usersposts = Tweet.objects.filter(user=request.user).order_by('-created_at')
+    # Récupérer l'utilisateur sélectionné
+    view_user = get_object_or_404(User, username=username)
+    registration_date = view_user.date_joined
+    is_own_profile = request.user == view_user  # Vérifier si c'est le profil connecté
+
+    # Récupérer les tweets de l'utilisateur sélectionné
+    usersposts = Tweet.objects.filter(user=view_user).order_by('-created_at')
     sorted_usersposts = sorted(
         chain(usersposts),
         key=lambda instance: instance.created_at,
         reverse=True
     )
 
-    return render(request, 'users/profile.html', {'user': user,
-            'registration_date': registration_date,
-            'sorted_usersposts': sorted_usersposts,
-            })
+    profile_form = None
+    form = None
+
+    
+    if request.user == view_user:
+        is_own_profile = True
+        profile_form = UpdateUserForm(instance=view_user)
+        if request.method == 'POST':
+            profile_form = UpdateUserForm(request.POST, instance=view_user)
+            if profile_form.is_valid():
+                profile_form.save()
+
+    
+    is_following = request.user.following.filter(followed=view_user).exists()
+
+    form = None
+    if request.user != view_user:
+        if request.method == 'POST':
+            if form.is_valid():
+                if is_following:
+                    print("L'uilisateur va se désabonner")
+                    request.user.follows.filter(followed=view_user).delete()
+                    print("L'uilisateur est désabonné")
+                else:
+                    request.user.follows.create(followed=view_user)
+                return HttpResponseRedirect(request.path)
+
+    context = {
+        'sorted_usersposts': sorted_usersposts,
+        'view_user': view_user,
+        'registration_date': registration_date,
+        'is_own_profile': is_own_profile,
+        'profile_form': profile_form,
+        'form': form,
+        'is_following': is_following,  
+    }
+
+    return render(request, 'users/profile.html', context)
+
 
 @login_required
 def deactivate_account(request, username):
@@ -83,3 +123,15 @@ def deactivate_account(request, username):
         return redirect('home')
 
     return redirect('logout')
+
+@login_required
+def follow_user(request, user_id):
+    user_to_follow = get_object_or_404(User, id=user_id)
+    Follow.objects.get_or_create(follower=request.user, followed=user_to_follow)
+    return redirect('profile', username=user_to_follow.username)
+
+@login_required
+def unfollow_user(request, user_id):
+    user_to_unfollow = get_object_or_404(User, id=user_id)
+    Follow.objects.filter(follower=request.user, followed=user_to_unfollow).delete()
+    return redirect('profile', username=user_to_unfollow.username)
