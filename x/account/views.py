@@ -6,9 +6,11 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.contrib import messages
 from django.urls import reverse_lazy
+from itertools import chain
 
 from .forms import CustomUserCreationForm, EmailAuthenticationForm
 from .models import User
+from post.models import Tweet
 
 
 @csrf_exempt
@@ -49,15 +51,18 @@ class CustomPasswordChangeView(PasswordChangeView):
 def profile_view(request, username):
     user = get_object_or_404(User, username=username)
     registration_date = user.date_joined
+    user = request.user
+    usersposts = Tweet.objects.filter(user=request.user).order_by('-created_at')
+    sorted_usersposts = sorted(
+        chain(usersposts),
+        key=lambda instance: instance.created_at,
+        reverse=True
+    )
 
-#    usersposts = Post.objects.filter(uploader=view_user)
-#    sorted_usersposts = sorted(
-#        chain(usersposts),
-#        key=lambda instance: instance.date_created,
-#        reverse=True
-#    )
-
-    return render(request, 'users/profile.html', {'user': user})
+    return render(request, 'users/profile.html', {'user': user,
+            'registration_date': registration_date,
+            'sorted_usersposts': sorted_usersposts,
+            })
 
 @login_required
 def deactivate_account(request, username):

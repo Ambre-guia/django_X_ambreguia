@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'post',
     'tailwind',
     'theme',
+    'hashtag',
 ]
 
 MIDDLEWARE = [

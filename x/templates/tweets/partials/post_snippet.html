@@ -1,26 +1,41 @@
 {% load static %}
-{% load post_extras %}
+{% load post_extras customs_filters%}
 <div class="post border-t p-4 hover:bg-gray-100 transition">
-        <div class="flex space-x-4">
-            <div>
-                {% if post.uploader.profile_picture %}
-                    <img class="max-h-10 w-10 rounded-full" src="{{ post.uploader.profile_picture.url }}" alt="{{ post.uploader.username }}">
-                {% else %}
-                    <img class="max-h-10 w-10 rounded-full" src="{% static 'Default_pfp.png' %}">
-                {% endif %}
+    <div class="flex space-x-4">
+        <div>
+            {% if post.uploader.profile_picture %}
+                <img class="max-h-10 w-10 rounded-full" src="{{ post.uploader.profile_picture.url }}" alt="{{ post.uploader.username }}">
+            {% else %}
+                <img class="max-h-10 w-10 rounded-full" src="{% static 'Default_pfp.png' %}">
+            {% endif %}
+        </div>
+        <div>
+            <div class="flex items-center space-x-1">
+                <p class="font-bold text-sm">{{ post.user.username }} </p>
+                <p>·</p>
+                <p> {{ post.created_at|get_posted_at_display }}</p>
             </div>
             <div>
-                <div class="flex items-center space-x-1">
-                    <p class="font-bold text-sm">{{ post.user.username }} </p>
-                    <p>·</p>
-                    <p> {{ post.created_at|get_posted_at_display }}</p>
+                <p>
+                    {% for word in post.content.split %}
+                        {% if word|starts_with:'#' %}
+                            <a href="{% url 'hashtag_view' word|slice:1 %}" class="text-blue-500 hover:underline">{{ word }}</a>
+                        {% else %}
+                            {{ word }}
+                        {% endif %}
+                    {% endfor %}
+                </p>
+            </div>
+            {% if post.image %}
+                <img class="max-h-96 mt-2 border rounded-lg" src="{{ post.image.url }}">
+            {% endif %}
+            {% if post.hashtags.exists %}
+                <div class="mt-2 flex space-x-2">
+                    {% for hashtag in post.hashtags.all %}
+                        <a href="{% url 'hashtag_view' hashtag.name %}" class="text-blue-500 hover:underline">#{{ hashtag.name }}</a>
+                    {% endfor %}
                 </div>
-                <div>
-                    <p>{{ post.content }}</p>
-                </div>
-                {% if post.image %}
-                    <img class="max-h-96 mt-2 border rounded-lg"src="{{ post.image.url }}">
-                {% endif %}
-            </div>   
-        </div>         
+            {% endif %}
+        </div>   
+    </div>         
 </div>

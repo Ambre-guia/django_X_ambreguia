@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}#{{ hashtag.name }} / X{% endblock %}
+{% load post_extras %}
+{% block content %}
+    <h1 class="text-xl font-bold">#{{ hashtag.name }}</h1>
+    <div>
+        {% for post in posts %}
+            {% include 'tweets/partials/post_snippet.html' with post=post %}
+        {% empty %}
+            <p class="text-gray-500">Aucun post avec ce hashtag pour le moment.</p>
+        {% endfor %}
+    </div>
+{% endblock content %}

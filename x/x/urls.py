@@ -23,4 +23,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('account/', include('account.urls')),
     path('', include('post.urls')),
+    path('hashtag/', include('hashtag.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
