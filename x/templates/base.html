@@ -56,8 +56,8 @@
                            <button id="dropdownTopButton" data-dropdown-toggle="dropdownTop" data-dropdown-placement="top" type="" class="text-black hover:bg-slate-200 rounded-full text-sm p-2 text-center w-full ">
                               <div class="flex items-center space-x-4">
                                  <div>
-                                    {% if user.profile_photo %}
-                                       <img class="rounded-full max-h-10" src="{{ user.profile_photo.url }}" alt="Profile Photo">
+                                    {% if user.profile_picture %}
+                                       <img class="rounded-full max-h-10" src="{{ user.profile_picture.url }}" alt="Profile Photo">
                                     {% else %}
                                        <img class="rounded-full max-h-10" src="{% static 'Default_pfp.png' %}">
                                     {% endif %}

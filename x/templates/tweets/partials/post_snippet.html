@@ -3,8 +3,8 @@
 <div class="post border-t p-4 hover:bg-gray-100 transition">
         <div class="flex space-x-4">
             <div>
-                {% if post.uploader.profile_photo %}
-                    <img class="max-h-10 w-10 rounded-full" src="{{ post.uploader.profile_photo.url }}" alt="{{ post.uploader.username }}">
+                {% if post.uploader.profile_picture %}
+                    <img class="max-h-10 w-10 rounded-full" src="{{ post.uploader.profile_picture.url }}" alt="{{ post.uploader.username }}">
                 {% else %}
                     <img class="max-h-10 w-10 rounded-full" src="{% static 'Default_pfp.png' %}">
                 {% endif %}
