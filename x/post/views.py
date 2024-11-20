@@ -21,9 +21,9 @@ def homepage(request):
             return redirect('homepage')
         
    
-    posts = models.Post.objects.annotate(num_comments=Count('comment'))
+    posts = models.Tweet.objects.annotate(num_comments=Count('comment'))
 
-    posts = models.Post.objects.all()
+    posts = models.Tweet.objects.all()
     sorted_posts = sorted(
         chain(posts),
         key=lambda instance: instance.date_created,
@@ -53,7 +53,7 @@ def post_upload(request):
 @login_required
 def view_post(request, post_id):
 
-    post = get_object_or_404(models.Post, id=post_id)
+    post = get_object_or_404(models.Tweet, id=post_id)
 
     # comments = models.Comment.objects.filter(post=post)
     # sorted_comments = sorted(

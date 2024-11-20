@@ -5,7 +5,7 @@ from django import forms
 
 class PostForm(forms.ModelForm):
     class Meta:
-        model = models.Post
+        model = models.Tweet
         fields = ['image', 'content']
 
     def __init__(self, *args, **kwargs):
