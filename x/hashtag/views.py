@@ -1,8 +1,11 @@
 from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+
 from .models import Hashtag
 from post.models import Tweet
 
+@login_required
 def hashtag_view(request, name):
     if name.startswith('%23'):
         name = name[3:]
