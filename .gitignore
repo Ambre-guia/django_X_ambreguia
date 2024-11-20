@@ -136,3 +136,5 @@ x/migrations/__pycache__
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+x/db.sqlite3
