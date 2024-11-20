@@ -13,25 +13,29 @@ def homepage(request):
     if request.method == 'POST':
         form = forms.PostForm(request.POST, request.FILES)
         if form.is_valid():
+            
+            form.instance.user = request.user
             post = form.save(commit=False)
            
-            post.uploader = request.user
+            post.user = request.user
             
             post.save()
-            return redirect('homepage')
+            return redirect('home')
         
    
 
 
-    posts = models.Tweet.objects.all()
+    posts = models.Tweet.objects.filter(user=request.user).order_by('-created_at')
     sorted_posts = sorted(
         chain(posts),
-        key=lambda instance: instance.date_created,
+        key=lambda instance: instance.created_at,
         reverse=True
     )
 
     context = {
-        'sorted_posts': sorted_posts,
+        'sorted_posts': posts,
+
+        'form': form
     }
 
     return render(request, 'tweets/home.html', context=context)
@@ -42,12 +46,13 @@ def post_upload(request):
     if request.method == 'POST':
         form = forms.PostForm(request.POST, request.FILES)
         if form.is_valid():
+            form.instance.user = request.user
             post = form.save(commit=False)
             
-            post.uploader = request.user
+            post.user = request.user
             
             post.save()
-            return redirect('homepage')
+            return redirect('home')
     return render(request, 'post/post_upload.html', context={'form': form})
 
 @login_required
@@ -79,4 +84,4 @@ def view_post(request, post_id):
             # 'sorted_comments' : sorted_comments
         }
     
-    return render(request, 'post/view_post.html', context=context)
+    return render(request, 'tweets/view_post.html', context=context)

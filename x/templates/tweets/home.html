@@ -9,7 +9,7 @@
     </div>
     {% include 'tweets/partials/form_snippet.html' %}
         {% for instance in sorted_posts %}
-            {% if instance|model_type == 'Post' %}
+            {% if instance|model_type == 'Tweet' %}
                 <a href="{% url 'view_post' instance.id %}">
                     {% include 'tweets/partials/post_snippet.html' with post=instance %}
                 </a>

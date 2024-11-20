@@ -20,8 +20,8 @@
             </div>
         </div>
         <div>
-            <a href="{% url 'view_user' post.uploader.username %} " class="font-bold text-sm">{{ post.uploader.first_name }} {{ post.uploader.last_name }}</a>
-            <p class="text-sm text-neutral-500">@{{ post.uploader.username }}</p>
+            <a href="{% url 'profile' post.user.username %} " class="font-bold text-sm"></a>
+            <p class="text-sm text-neutral-500">@{{ post.user.username }}</p>
         </div>
     </div>
     <div class="pt-4">
@@ -29,7 +29,7 @@
         {% if post.image %}
                 <img class="max-h-96 my-2 rounded-lg"src="{{ post.image.url }}">
             {% endif %}
-        <p class="pt-2 text-neutral-500">{{ post.date_created|date:"G:i A" }} &middot; {{ post.date_created|date:"j M Y"|lower }}</p>
+        <p class="pt-2 text-neutral-500">{{ post.created_at|date:"G:i A" }} &middot; {{ post.created_at|date:"j M Y"|lower }}</p>
     </div>
 </div>
 

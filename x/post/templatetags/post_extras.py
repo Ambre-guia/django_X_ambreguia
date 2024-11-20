@@ -15,6 +15,8 @@ def model_type(value):
 
 @register.filter
 def get_posted_at_display(posted_at):
+    if isinstance(posted_at, str):
+        posted_at = timezone.make_aware(timezone.datetime.strptime(posted_at, '%Y-%m-%d %H:%M:%S'))
     seconds_ago = (timezone.now() - posted_at).total_seconds()
     if seconds_ago <= MINUTE:
         return f'Maintenant'
