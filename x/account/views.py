@@ -55,12 +55,12 @@ class CustomPasswordChangeView(PasswordChangeView):
     
 @login_required
 def profile_view(request, username):
-    # Récupérer l'utilisateur sélectionné
+    
     view_user = get_object_or_404(User, username=username)
     registration_date = view_user.date_joined
-    is_own_profile = request.user == view_user  # Vérifier si c'est le profil connecté
+    is_own_profile = request.user == view_user 
 
-    # Récupérer les tweets de l'utilisateur sélectionné
+    
     usersposts = Tweet.objects.filter(user=view_user).order_by('-created_at')
     sorted_usersposts = sorted(
         chain(usersposts),

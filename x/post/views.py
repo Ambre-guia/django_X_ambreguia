@@ -1,114 +1,108 @@
-from itertools import chain
-from django.core.paginator import Paginator
-from django.db.models import Count
+
+from django.db.models import Q
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404, get_list_or_404, redirect, render
+from django.views.generic import DetailView, TemplateView, FormView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import get_object_or_404, redirect
+from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse_lazy
+from django.views import View
 
-from . import models
-from . import forms
+from .models import Tweet, Like, Retweet
+from .forms import PostForm
 
-@login_required
-def homepage(request):
-    form = forms.PostForm()
-    if request.method == 'POST':
-        form = forms.PostForm(request.POST, request.FILES)
-        if form.is_valid():
-            
-            form.instance.user = request.user
-            post = form.save(commit=False)
-           
-            post.user = request.user
-            
-            post.save()
-            return redirect('home')
+class HomePageView(LoginRequiredMixin, TemplateView):
+    template_name = 'tweets/home.html'
+    login_url = 'login'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
         
-   
+        following_users = self.request.user.following.values_list('followed', flat=True)
 
-
-    posts = models.Tweet.objects.filter(user=request.user).order_by('-created_at')
-    sorted_posts = sorted(
-        chain(posts),
-        key=lambda instance: instance.created_at,
-        reverse=True
-    )
-
-    context = {
-        'sorted_posts': posts,
-
-        'form': form
-    }
-
-    return render(request, 'tweets/home.html', context=context)
-
-@login_required
-def post_upload(request):
-    form = forms.PostForm()
-    if request.method == 'POST':
-        form = forms.PostForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.instance.user = request.user
-            post = form.save(commit=False)
-            
-            post.user = request.user
-            
-            post.save()
-            return redirect('home')
-    return render(request, 'post/post_upload.html', context={'form': form})
-
-@login_required
-def view_post(request, post_id):
-
-    post = get_object_or_404(models.Tweet, id=post_id)
-
-    # comments = models.Comment.objects.filter(post=post)
-    # sorted_comments = sorted(
-    #     chain(comments),
-    #     key=lambda instance: instance.date_created,
-    #     reverse=True
-    # )
-
-
-    # form = forms.CommentForm()
-    # if request.method == 'POST':
-    #     form = forms.CommentForm(request.POST)
-    #     if form.is_valid():
-    #         comment = form.save(commit=False)
-    #         comment.post = post  
-    #         comment.uploader = request.user 
-            
-    #         form.save()
-    #         return redirect('view_post', post_id=post.id)
         
-    context = {
-            'post': post,
-            # 'sorted_comments' : sorted_comments
-        }
+        tweets_from_following = Tweet.objects.filter(
+            Q(user__in=following_users) | Q(user=self.request.user)
+        )
+
+        
+        retweeted_tweets = Tweet.objects.filter(
+            retweets__user=self.request.user
+        )
+
+        
+        all_tweets = (tweets_from_following | retweeted_tweets).distinct().order_by('-created_at')
+
+        context['sorted_posts'] = all_tweets
+        context['form'] = PostForm()
+
+        return context
+
+
+class PostCreateView(LoginRequiredMixin, FormView):
+    template_name = 'tweets/home.html'
+    form_class = PostForm
+    success_url = reverse_lazy('home')
+    login_url = 'login'
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.save()
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        home_context = HomePageView().get_context_data()
+        context.update(home_context)
+        return context
+
+class PostUploadView(LoginRequiredMixin, FormView):
+    template_name = 'post/post_upload.html'
+    form_class = PostForm
+    login_url = 'login'
+    success_url = reverse_lazy('home') 
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.save()
+        return super().form_valid(form)
     
-    return render(request, 'tweets/view_post.html', context=context)
+@method_decorator(login_required, name='dispatch')
+class PostDetailView(DetailView, FormView):
+    model = Tweet
+    template_name = 'tweets/view_post.html'
+    context_object_name = 'post'
 
-@login_required
-def toggle_like(request, tweet_id):
-    tweet = get_object_or_404(models.Tweet, id=tweet_id)
-    like, created = models.Like.objects.get_or_create(user=request.user, tweet=tweet)
-    if not created:
-        # Si un like existe déjà, le supprimer
-        like.delete()
-        liked = False
-    else:
-        liked = True
 
-    return JsonResponse({'liked': liked, 'likes_count': tweet.likes.count()})
+class ToggleLikeView(LoginRequiredMixin, View):
+    login_url = 'login' 
 
-@login_required
-def toggle_retweet(request, tweet_id):
-    tweet = get_object_or_404(models.Tweet, id=tweet_id)
-    retweet, created = models.Retweet.objects.get_or_create(user=request.user, original_tweet=tweet)
-    if not created:
-        # Si un retweet existe déjà, le supprimer
-        retweet.delete()
-        retweeted = False
-    else:
-        retweeted = True
+    def post(self, request, tweet_id):
+        tweet = get_object_or_404(Tweet, id=tweet_id)
+        like, created = Like.objects.get_or_create(user=request.user, tweet=tweet)
+        
+        if not created: 
+            like.delete()
+            liked = False
+        else:
+            liked = True
 
-    return JsonResponse({'retweeted': retweeted, 'retweets_count': tweet.retweets.count()})
+        return redirect('home')
+    
+
+class ToggleRetweetView(LoginRequiredMixin, View):
+    login_url = 'login'
+
+    def post(self, request, tweet_id):
+        tweet = get_object_or_404(Tweet, id=tweet_id)
+        retweet, created = Retweet.objects.get_or_create(user=request.user, original_tweet=tweet)
+        
+        if not created: 
+            retweet.delete()
+            retweeted = False
+        else:
+            retweeted = True
+
+        return JsonResponse({'retweeted': retweeted, 'retweets_count': tweet.retweets.count()})
