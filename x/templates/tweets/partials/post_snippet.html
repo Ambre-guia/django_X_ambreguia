@@ -29,6 +29,59 @@
             {% if post.image %}
                 <img class="max-h-96 mt-2 border rounded-lg" src="{{ post.image.url }}">
             {% endif %}
+            <div>
+                <button id="like-btn-{{ tweet.id }}" onclick="toggleLike({{ tweet.id }})">
+                    <svg id="like-icon-{{ tweet.id }}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 19.071a8.4 8.4 0 010-11.942l.707-.707a6.7 6.7 0 019.556 0l.707.707a8.4 8.4 0 010 11.942L12 21.213l-6.879-2.142z" />
+                    </svg>
+                </button>
+                <span id="likes-count-{{ tweet.id }}">{{ tweet.likes.count }}</span>
+            </div>
+            <div>
+                <button id="retweet-btn-{{ tweet.id }}" onclick="toggleRetweet({{ tweet.id }})">
+                    <svg id="retweet-icon-{{ tweet.id }}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 17l4-4m0 0l-4-4m4 4H7m0 0l-4-4m4 4l-4 4" />
+                    </svg>
+                </button>
+                <span id="retweets-count-{{ tweet.id }}">{{ tweet.retweets.count }}</span>
+            </div>
+            <script>
+                const csrftoken = '{{ csrf_token }}';
+                function toggleLike(tweetId) {
+                    fetch(`/like/${tweetId}/`, { method: 'POST', headers: { 'X-CSRFToken': csrftoken } })
+                        .then(response => response.json())
+                        .then(data => {
+                            const likeIcon = document.getElementById(`like-icon-${tweetId}`);
+                            const likesCount = document.getElementById(`likes-count-${tweetId}`);
+
+                            if (data.liked) {
+                                likeIcon.classList.add('fill-current', 'text-red-500');
+                                likeIcon.classList.remove('stroke-current', 'text-gray-500');
+                            } else {
+                                likeIcon.classList.add('stroke-current', 'text-gray-500'); 
+                                likeIcon.classList.remove('fill-current', 'text-red-500'); 
+                            }
+                            likesCount.textContent = data.likes_count;
+                        });
+                }
+                function toggleRetweet(tweetId) {
+                    fetch(`/retweet/${tweetId}/`, { method: 'POST', headers: { 'X-CSRFToken': csrftoken } })
+                        .then(response => response.json())
+                        .then(data => {
+                            const retweetIcon = document.getElementById(`retweet-icon-${tweetId}`);
+                            const retweetsCount = document.getElementById(`retweets-count-${tweetId}`);
+
+                            if (data.retweeted) {
+                                retweetIcon.classList.add('fill-current', 'text-green-500'); 
+                                retweetIcon.classList.remove('stroke-current', 'text-gray-500'); 
+                            } else {
+                                retweetIcon.classList.add('stroke-current', 'text-gray-500'); 
+                                retweetIcon.classList.remove('fill-current', 'text-green-500'); 
+                            }
+                            retweetsCount.textContent = data.retweets_count;
+                        });
+                }
+            </script>
             {% if post.hashtags.exists %}
                 <div class="mt-2 flex space-x-2">
                     {% for hashtag in post.hashtags.all %}

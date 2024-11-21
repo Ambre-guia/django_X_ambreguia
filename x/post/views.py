@@ -1,9 +1,10 @@
 from itertools import chain
 from django.core.paginator import Paginator
 from django.db.models import Count
-
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, get_list_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
+
 from . import models
 from . import forms
 
@@ -85,3 +86,29 @@ def view_post(request, post_id):
         }
     
     return render(request, 'tweets/view_post.html', context=context)
+
+@login_required
+def toggle_like(request, tweet_id):
+    tweet = get_object_or_404(models.Tweet, id=tweet_id)
+    like, created = models.Like.objects.get_or_create(user=request.user, tweet=tweet)
+    if not created:
+        # Si un like existe déjà, le supprimer
+        like.delete()
+        liked = False
+    else:
+        liked = True
+
+    return JsonResponse({'liked': liked, 'likes_count': tweet.likes.count()})
+
+@login_required
+def toggle_retweet(request, tweet_id):
+    tweet = get_object_or_404(models.Tweet, id=tweet_id)
+    retweet, created = models.Retweet.objects.get_or_create(user=request.user, original_tweet=tweet)
+    if not created:
+        # Si un retweet existe déjà, le supprimer
+        retweet.delete()
+        retweeted = False
+    else:
+        retweeted = True
+
+    return JsonResponse({'retweeted': retweeted, 'retweets_count': tweet.retweets.count()})
