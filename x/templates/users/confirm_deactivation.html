@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}desactivation / X{% endblock %}
+{% load post_extras %}
+{% block content %}
+<div class="max-w-lg mx-auto p-6 bg-white border rounded shadow-md">
+    <h2 class="text-2xl font-bold text-center text-red-600">Confirmer la désactivation</h2>
+    <p class="mt-4 text-center">
+        Êtes-vous sûr(e) de vouloir désactiver votre compte ?<br>
+        Cette action est irréversible.
+    </p>
+
+    <div class="mt-6 flex justify-center space-x-4">
+        <!-- Formulaire pour confirmer -->
+        <form method="post" action="{% url 'deactivate_account' username=username %}">
+            {% csrf_token %}
+            <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+                Oui, désactiver mon compte
+            </button>
+        </form>
+
+        <!-- Bouton pour annuler -->
+        <a href="{% url 'profile' username=username %}" class="px-4 py-2  rounded ">
+            Annuler
+        </a>
+    </div>
+</div>
+{% endblock %}

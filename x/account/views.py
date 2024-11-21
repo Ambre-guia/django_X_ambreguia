@@ -105,6 +105,13 @@ class ProfileView(LoginRequiredMixin, DetailView):
 
 
 class DeactivateAccountView(LoginRequiredMixin, View):
+    def get(self, request, username):
+        if request.user.username != username:
+            messages.error(request, "Action non autorisée.")
+            return redirect('home')
+
+        return render(request, 'users/confirm_deactivation.html', {'username': username})
+
     def post(self, request, username):
         if request.user.username != username:
             messages.error(request, "Action non autorisée.")
