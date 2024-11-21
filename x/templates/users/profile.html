@@ -14,7 +14,7 @@
         <div class="flex justify-between">
             <div>
             {% if view_user.profile_photo %}
-                <img class="rounded-full max-h-32" src="{{ user.profile_photo.url }}" alt="Profile Photo">
+                <img class="rounded-full max-h-32" src="{{ view_user.profile_photo.url }}" alt="Profile Photo">
             {% else %}
                 <img class="rounded-full max-h-32" src="{% static 'Default_pfp.png' %}">
             {% endif %}
@@ -76,15 +76,16 @@
             </form>
             <div>
                 {% if is_following %}
-                    <button onclick="submitFollowForm()" type="submit" class="text-white bg-gray-800 hover:bg-gray-900 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2">Se désabonner</button>
+                <form action="{% url 'unfollow_user' view_user.id %}" method="post">
+                    {% csrf_token %}
+                    <button  type="submit" class="text-white bg-gray-800 hover:bg-gray-900 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2">Se désabonner</button>
+                </form>
                 {% else %}
-                    <button onclick="submitFollowForm()" type="submit" class="text-white bg-gray-800 hover:bg-gray-900 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 ">Suivre</button>
+                <form action="{% url 'follow_user' view_user.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="text-white bg-gray-800 hover:bg-gray-900 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 ">Suivre</button>
+                </form>
                 {% endif %}
-                <script>
-                    function submitFollowForm() {
-                        document.getElementById('follow').submit();
-                    }
-                </script>
             </div>
 
          

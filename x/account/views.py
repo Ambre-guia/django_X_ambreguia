@@ -7,6 +7,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.contrib import messages
 from django.urls import reverse_lazy
+from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from itertools import chain
 
@@ -128,14 +130,15 @@ def deactivate_account(request, username):
 
     return redirect('logout')
 
-@login_required
-def follow_user(request, user_id):
-    user_to_follow = get_object_or_404(User, id=user_id)
-    Follow.objects.get_or_create(follower=request.user, followed=user_to_follow)
-    return redirect('profile', username=user_to_follow.username)
+class FollowUserView(LoginRequiredMixin, View):
+    def post(self, request, user_id):
+        user_to_follow = get_object_or_404(User, id=user_id)
+        Follow.objects.get_or_create(follower=request.user, followed=user_to_follow)
+        return redirect('profile', username=user_to_follow.username)
 
-@login_required
-def unfollow_user(request, user_id):
-    user_to_unfollow = get_object_or_404(User, id=user_id)
-    Follow.objects.filter(follower=request.user, followed=user_to_unfollow).delete()
-    return redirect('profile', username=user_to_unfollow.username)
+
+class UnfollowUserView(LoginRequiredMixin, View):
+    def post(self, request, user_id):
+        user_to_unfollow = get_object_or_404(User, id=user_id)
+        Follow.objects.filter(follower=request.user, followed=user_to_unfollow).delete()
+        return redirect('profile', username=user_to_unfollow.username)
