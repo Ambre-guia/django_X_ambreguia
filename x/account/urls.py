@@ -1,14 +1,15 @@
 from django.urls import path
-from django.contrib.auth.views import LogoutView
-from .views import register, logout_view, FollowUserView, UnfollowUserView, custom_login_view, CustomPasswordChangeView, profile_view, deactivate_account
+from .views import (
+    RegisterView, LogoutView, CustomLoginView, ProfileView,
+    DeactivateAccountView, FollowUserView, UnfollowUserView
+)
 
 urlpatterns = [
-    path('register/', register, name='register'),
-    path('login/', custom_login_view, name='login'), 
-    path('logout/', logout_view, name='logout'),
-    path('password_change/', CustomPasswordChangeView.as_view(), name='password_change'),
-    path('<str:username>/', profile_view, name='profile'),
-    path('<str:username>/deactivate/', deactivate_account, name='deactivate'),
-    path('follow/<int:user_id>/',FollowUserView.as_view(), name='follow_user'),
+    path('register/', RegisterView.as_view(), name='register'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('login/', CustomLoginView.as_view(), name='login'),
+    path('profile/<slug:username>/', ProfileView.as_view(), name='profile'),
+    path('deactivate/<slug:username>/', DeactivateAccountView.as_view(), name='deactivate_account'),
+    path('follow/<int:user_id>/', FollowUserView.as_view(), name='follow_user'),
     path('unfollow/<int:user_id>/', UnfollowUserView.as_view(), name='unfollow_user'),
 ]
