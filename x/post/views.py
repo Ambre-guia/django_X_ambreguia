@@ -28,9 +28,12 @@ class HomePageView(LoginRequiredMixin, TemplateView):
         )
 
         
+        # retweeted_tweets = Tweet.objects.filter(
+        #     retweets__user=self.request.user
+        # )
+
         retweeted_tweets = Retweet.objects.filter(user=self.request.user)
         retweet_tweets_ids = [retweet.original_tweet.id for retweet in retweeted_tweets]
-        print(retweet_tweets_ids)
         retweeted_tweets_queryset = Tweet.objects.filter(id__in=retweet_tweets_ids)
 
         print(f'retweets query : {retweeted_tweets_queryset}')
