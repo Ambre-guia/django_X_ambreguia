@@ -30,8 +30,8 @@
                 <img class="max-h-96 mt-2 border rounded-lg" src="{{ post.image.url }}">
             {% endif %}
             
-            <div>
-                <form action="{% url 'toggle_like' post.id %}" method="post">
+            <div  class="flex gap-4 justify-evenly pt-2">
+                <form class="flex gap-2" action="{% url 'toggle_like' post.id %}" method="post">
                     {% csrf_token %}
                     <button id="like-btn-{{ post.id }}" type="submit">
                         <svg id="like-icon-{{ post.id }}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -40,10 +40,7 @@
                     </button>
                     <span id="likes-count-{{ post.id }}">{{ post.likes.count }}</span>
                 </form>
-                
-            </div>
-            <div>
-                <form action="{% url 'toggle_retweet' post.id %}" method="post">
+                <form  class="flex gap-4" action="{% url 'toggle_retweet' post.id %}" method="post">
                     {% csrf_token %}
                     <button id="retweet-btn-{{ post.id }}" type="submit">
                         <svg id="retweet-icon-{{ post.id }}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

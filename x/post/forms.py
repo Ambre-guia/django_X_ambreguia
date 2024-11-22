@@ -14,15 +14,12 @@ class PostForm(forms.ModelForm):
 
 
 
-##############
-## Improve ###
-##############
 
 # class CommentForm(forms.ModelForm):
-#     class Meta:
-#         model = models.Comment
-#         fields = ['image', 'content']
+#      class Meta:
+#          model = models.Comment
+#          fields = ['image', 'content']
 
-#     def __init__(self, *args, **kwargs):
-#         super(CommentForm, self).__init__(*args, **kwargs)
-#         self.fields['image'].required = False  
+#      def __init__(self, *args, **kwargs):
+#          super(CommentForm, self).__init__(*args, **kwargs)
+#          self.fields['image'].required = False  

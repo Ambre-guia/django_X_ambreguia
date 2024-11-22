@@ -69,11 +69,12 @@ class PostUploadView(LoginRequiredMixin, FormView):
         form.save()
         return super().form_valid(form)
     
-@method_decorator(login_required, name='dispatch')
-class PostDetailView(DetailView, FormView):
+
+class PostDetailView(DetailView):
     model = Tweet
     template_name = 'tweets/view_post.html'
     context_object_name = 'post'
+    pk_url_kwarg = 'post_id'
 
 
 class ToggleLikeView(LoginRequiredMixin, View):
