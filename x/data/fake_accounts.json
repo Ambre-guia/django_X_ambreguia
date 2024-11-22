@@ -1,0 +1,204 @@
+{
+    "users": [
+        {
+            "username": "techcorp",
+            "email": "contact@techcorp.com",
+            "password": "TechCorp123!",
+            "profile_photo": null,
+            "tweets": [
+                {
+                    "content": "Our new product is here! Check it out now.",
+                    "image": null
+                },
+                {
+                    "content": "We\u2019re hiring developers! Join our team today.",
+                    "image": null
+                },
+                {
+                    "content": "Proud to celebrate 10 years of innovation!",
+                    "image": null
+                }
+            ]
+        },
+        {
+            "username": "ecoworld",
+            "email": "info@ecoworld.com",
+            "password": "EcoWorld2024!",
+            "profile_photo": null,
+            "tweets": [
+                {
+                    "content": "Together, we can make a difference for the planet.",
+                    "image": null
+                },
+                {
+                    "content": "Recycle today for a greener tomorrow!",
+                    "image": null
+                },
+                {
+                    "content": "#EcoLiving: Tips for a sustainable lifestyle.",
+                    "image": null
+                }
+            ]
+        },
+        {
+            "username": "fastfoodies",
+            "email": "contact@fastfoodies.com",
+            "password": "FastFood123!",
+            "profile_photo": null,
+            "tweets": [
+                {
+                    "content": "Craving something tasty? Check our new menu!",
+                    "image": null
+                },
+                {
+                    "content": "Free fries with every order this Friday!",
+                    "image": null
+                },
+                {
+                    "content": "Our secret sauce? It\u2019s made with love. \u2764\ufe0f",
+                    "image": null
+                }
+            ]
+        },
+        {
+            "username": "autodrive",
+            "email": "support@autodrive.com",
+            "password": "DriveSafe2024!",
+            "profile_photo": null,
+            "tweets": [
+                {
+                    "content": "Safety first! Discover our latest autonomous car.",
+                    "image": null
+                },
+                {
+                    "content": "What feature would you like in your dream car?",
+                    "image": null
+                },
+                {
+                    "content": "Explore the future of mobility with AutoDrive.",
+                    "image": null
+                }
+            ]
+        },
+        {
+            "username": "healthify",
+            "email": "contact@healthify.com",
+            "password": "Healthify2024!",
+            "profile_photo": null,
+            "tweets": [
+                {
+                    "content": "Start your day with a healthy breakfast. \ud83c\udf73",
+                    "image": null
+                },
+                {
+                    "content": "10,000 steps a day keeps the doctor away!",
+                    "image": null
+                },
+                {
+                    "content": "Check out our fitness app for personalized plans.",
+                    "image": null
+                }
+            ]
+        },
+        {
+            "username": "skylineair",
+            "email": "info@skylineair.com",
+            "password": "FlyHigh2024!",
+            "profile_photo": null,
+            "tweets": [
+                {
+                    "content": "Where will your next adventure take you?",
+                    "image": null
+                },
+                {
+                    "content": "Book your flights today and save 20%!",
+                    "image": null
+                },
+                {
+                    "content": "Experience luxury in the skies with SkyLineAir.",
+                    "image": null
+                }
+            ]
+        },
+        {
+            "username": "greentech",
+            "email": "contact@greentech.com",
+            "password": "GreenTech2024!",
+            "profile_photo": null,
+            "tweets": [
+                {
+                    "content": "Innovating for a sustainable tomorrow.",
+                    "image": null
+                },
+                {
+                    "content": "Reducing carbon footprints, one step at a time.",
+                    "image": null
+                },
+                {
+                    "content": "#GoGreen with GreenTech solutions.",
+                    "image": null
+                }
+            ]
+        },
+        {
+            "username": "urbanwear",
+            "email": "info@urbanwear.com",
+            "password": "UrbanStyle2024!",
+            "profile_photo": null,
+            "tweets": [
+                {
+                    "content": "Step into style with our new collection!",
+                    "image": null
+                },
+                {
+                    "content": "UrbanWear: Redefining fashion for the streets.",
+                    "image": null
+                },
+                {
+                    "content": "Tag us in your UrbanWear looks! #UrbanStyle.",
+                    "image": null
+                }
+            ]
+        },
+        {
+            "username": "fitflex",
+            "email": "support@fitflex.com",
+            "password": "FitFlex123!",
+            "profile_photo": null,
+            "tweets": [
+                {
+                    "content": "Push your limits with FitFlex programs!",
+                    "image": null
+                },
+                {
+                    "content": "Your goals, your way. Start today!",
+                    "image": null
+                },
+                {
+                    "content": "Fuel your workouts with our new protein bars.",
+                    "image": null
+                }
+            ]
+        },
+        {
+            "username": "bookhaven",
+            "email": "contact@bookhaven.com",
+            "password": "BookHaven2024!",
+            "profile_photo": null,
+            "tweets": [
+                {
+                    "content": "Lose yourself in the world of books. \ud83d\udcda",
+                    "image": null
+                },
+                {
+                    "content": "What\u2019s your favorite genre? Let us know!",
+                    "image": null
+                },
+                {
+                    "content": "Discover our top picks for this month!",
+                    "image": null
+                }
+            ]
+        }
+    ]
+}

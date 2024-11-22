@@ -56,6 +56,13 @@ class CustomPasswordChangeView(LoginRequiredMixin, View):
     success_url = reverse_lazy('profile')
 
 
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.views.generic import DetailView
+from .forms import UpdateUserForm
+from post.models import Tweet
+from itertools import chain
+
 class ProfileView(LoginRequiredMixin, DetailView):
     model = User
     template_name = 'users/profile.html'
@@ -69,6 +76,7 @@ class ProfileView(LoginRequiredMixin, DetailView):
         registration_date = view_user.date_joined
         is_own_profile = self.request.user == view_user
 
+        # Posts de l'utilisateur
         usersposts = Tweet.objects.filter(user=view_user).order_by('-created_at')
         sorted_usersposts = sorted(
             chain(usersposts),
@@ -91,17 +99,16 @@ class ProfileView(LoginRequiredMixin, DetailView):
 
     def post(self, request, *args, **kwargs):
         view_user = self.get_object()
-        if request.user == view_user:
-            profile_form = UpdateUserForm(request.POST, instance=view_user)
-            if profile_form.is_valid():
-                profile_form.save()
-        else:
-            is_following = request.user.following.filter(followed=view_user).exists()
-            if is_following:
-                Follow.objects.filter(follower=request.user, followed=view_user).delete()
-            else:
-                Follow.objects.get_or_create(follower=request.user, followed=view_user)
-        return redirect('profile', username=view_user.username)
+        is_own_profile = self.request.user == view_user
+        
+        if is_own_profile:
+            form = UpdateUserForm(request.POST, request.FILES, instance=view_user)
+            if form.is_valid():
+                form.save()
+                return redirect('profile', username=view_user.username)  # Redirige vers la même page après l'update
+
+        return self.get(request, *args, **kwargs)
+
 
 
 class DeactivateAccountView(LoginRequiredMixin, View):

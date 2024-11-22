@@ -44,19 +44,14 @@ class HomePageView(LoginRequiredMixin, TemplateView):
 class PostCreateView(LoginRequiredMixin, FormView):
     template_name = 'tweets/home.html'
     form_class = PostForm
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('home')  
     login_url = 'login'
 
     def form_valid(self, form):
-        form.instance.user = self.request.user
-        form.save()
+        form.instance.user = self.request.user  
+        form.save() 
         return super().form_valid(form)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        home_context = HomePageView().get_context_data()
-        context.update(home_context)
-        return context
 
 class PostUploadView(LoginRequiredMixin, FormView):
     template_name = 'post/post_upload.html'

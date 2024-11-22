@@ -13,9 +13,10 @@ class EmailAuthenticationForm(AuthenticationForm):
 
 
 class UpdateUserForm(forms.ModelForm):
+    profile_picture = forms.ImageField(required=False)
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'bio']
+        fields = ['bio', 'profile_picture']
 
 class FollowUsersForm(forms.ModelForm):
     class Meta:

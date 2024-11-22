@@ -56,7 +56,8 @@
                                         <input type="text" name="first_name" value="{{user.username }}" placeholder="Username" required class="border border-gray-500 text-sm rounded focus:ring-blue-500 block h-12 p-2.5">
                                     </div>
                                     <div class="mb-6 w-full">
-                                        <input type="textarea" name="bio" value="{{ user.bio }}" placeholder="Bio" class="border border-gray-500 text-sm rounded focus:ring-blue-500 h-12 p-2.5">
+                                        <label for="profile_picture" class="block text-sm font-medium text-gray-700">Photo de Profil</label>
+                                        <input type="file" name="profile_picture" accept="image/*" class="border border-gray-500 text-sm rounded focus:ring-blue-500 block w-full h-12 p-2.5">
                                     </div>
                                 </div>
                             </form>
