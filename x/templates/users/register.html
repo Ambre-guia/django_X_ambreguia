@@ -5,45 +5,46 @@
 
 
 {% block content %}
-<div class="flex justify-center items-center bg-neutral-400 h-screen"></div>
-  <h2>Inscription</h2>
-  <form action="" method="post" enctype="multipart/form-data" class="flex flex-col items-center mt-8 pb-10 px-28 pt-2 bg-white rounded-2xl">
-    {% csrf_token %}
-            <img src="{% static 'x-logo.png' %}" class="h-6 me-3 sm:h-7" alt="Flowbite Logo" />
-			<h2 class="text-3xl font-bold mt-6 mb-10">Inscrivez-vous à X</h2><br>
-			{% if error %}
-				<div class="flex items-center p-4 mb-4 text-sm text-white bg-red-600 w-96" role="alert">
-					<svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 20 20">
-						<path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-					</svg>
-				</div>
-			{% endif %}
+<div class="flex justify-center items-center bg-neutral-400 h-screen">
+  
+  	<form action="" method="post" enctype="multipart/form-data" class="flex flex-col items-center mt-8 pb-10 px-28 pt-2 bg-white rounded-2xl">
+		{% csrf_token %}
+		<img src="{% static 'x-logo.png' %}" class="h-6 me-3 sm:h-7" alt="Flowbite Logo" />
+		<h2 class="text-3xl font-bold mt-6 mb-10">Inscrivez-vous à X</h2><br>
+		{% if error %}
+			<div class="flex items-center p-4 mb-4 text-sm text-white bg-red-600 w-96" role="alert">
+				<svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewbox="0 0 20 20">
+					<path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+				</svg>
+			</div>
+		{% endif %}
 			
-      <div class="mb-6 w-full ">
-				<input type="email" name="email" value="{{ email }}" placeholder="Email" required autofocus class="border border-gray-500  text-sm rounded focus:ring-blue-500block  h-12 p-2.5">
+      	<div class="mb-6 w-full ">
+			<input type="email" name="email" value="{{ email }}" placeholder="Email" required autofocus class="border border-gray-500  text-sm rounded focus:ring-blue-500block  h-12 p-2.5">
+		</div>
+		<div class="mb-6 w-full">
+			<input type="text" name="username" value="{{ username }}" placeholder="Nom d'utilisateur" autocomplete="username" required autofocus class=" border border-gray-500  text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full h-12 p-2.5">
+		</div>
+		<div class="mb-6 w-full">
+			<input  id="profile_picture" class="" name="profile_picture" type="file">
+		</div>
+		<div class="mb-6 w-full">
+			<input type="password" name="password1" id="inputPassword" autocomplete="current-password" placeholder="Mot de passe" class=" border border-gray-500 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full h-12 p-2.5" required>
+		</div>
+		<div class="mb-6 w-full">
+			<input type="password" name="password2" id="inputPassword" autocomplete="current-password" placeholder="Confirmer le mot de passe" class=" border border-gray-500 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full h-12 p-2.5" required>
+		</div>
+		{% if form.errors %}
+			<div class="text-red-500 w-96">
+				{{ form.errors }}
 			</div>
-			<div class="mb-6 w-full">
-				<input type="text" name="username" value="{{ username }}" placeholder="Nom d'utilisateur" autocomplete="username" required autofocus class=" border border-gray-500  text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full h-12 p-2.5">
-			</div>
-			<div class="mb-6 w-full">
-            	<input  id="profile_picture" class="" name="profile_picture" type="file">
-			</div>
-			<div class="mb-6 w-full">
-				<input type="password" name="password1" id="inputPassword" autocomplete="current-password" placeholder="Mot de passe" class=" border border-gray-500 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full h-12 p-2.5" required>
-			</div>
-            <div class="mb-6 w-full">
-				<input type="password" name="password2" id="inputPassword" autocomplete="current-password" placeholder="Confirmer le mot de passe" class=" border border-gray-500 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full h-12 p-2.5" required>
-			</div>
-            {% if form.errors %}
-                <div class="text-red-500 w-96">
-                    {{ form.errors }}
-                </div>
-            {% endif %}
-			<button type="submit" class="transition mt-10 w-72 text-white bg-gray-950 hover:bg-gray-900 font-bold rounded-full text-base px-5 py-2 text-center">S'inscrire</button>
-			<p class="text-zinc-500  text-base mt-10">Vous avez déjà un compte ?
-				<a href="{% url 'login' %}" class="text-sky-500">Connectez-vous.</a>
-			</p>
-			<br>
-		</form>
-    </div>
+		{% endif %}
+		<button type="submit" class="transition mt-10 w-72 text-white bg-gray-950 hover:bg-gray-900 font-bold rounded-full text-base px-5 py-2 text-center">S'inscrire</button>
+		<p class="text-zinc-500  text-base mt-10">Vous avez déjà un compte ?
+			<a href="{% url 'login' %}" class="text-sky-500">Connectez-vous.</a>
+		</p>
+		<br>
+		
+	</form>
+</div>
 {% endblock content %}
