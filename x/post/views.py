@@ -28,12 +28,17 @@ class HomePageView(LoginRequiredMixin, TemplateView):
         )
 
         
-        retweeted_tweets = Tweet.objects.filter(
-            retweets__user=self.request.user
-        )
+        retweeted_tweets = Retweet.objects.filter(user=self.request.user)
+        retweet_tweets_ids = [retweet.original_tweet.id for retweet in retweeted_tweets]
+        print(retweet_tweets_ids)
+        retweeted_tweets_queryset = Tweet.objects.filter(id__in=retweet_tweets_ids)
 
+        print(f'retweets query : {retweeted_tweets_queryset}')
+
+        for tweet in retweeted_tweets_queryset:
+            tweet.is_retweet = True
         
-        all_tweets = (tweets_from_following | retweeted_tweets).distinct().order_by('-created_at')
+        all_tweets = (tweets_from_following | retweeted_tweets_queryset).order_by('-created_at')
 
         context['sorted_posts'] = all_tweets
         context['form'] = PostForm()
@@ -101,4 +106,4 @@ class ToggleRetweetView(LoginRequiredMixin, View):
         else:
             retweeted = True
 
-        return JsonResponse({'retweeted': retweeted, 'retweets_count': tweet.retweets.count()})
+        return redirect('home')
